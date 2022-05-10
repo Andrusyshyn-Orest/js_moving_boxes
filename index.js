@@ -25,6 +25,10 @@ function addEventListenerToBox(box) {
 
     }
 
+    function mouseUp(ev) {
+        document.removeEventListener('mousemove', mouseMove);
+    }
+
     box.addEventListener('mousedown', (ev) => {
         ev.preventDefault();
         if (ev.which !== 1) {
@@ -38,9 +42,8 @@ function addEventListenerToBox(box) {
 
         document.addEventListener('mousemove', mouseMove);
 
-        document.addEventListener('mouseup', (ev) => {
-            document.removeEventListener('mousemove', mouseMove);
-        });
+        document.removeEventListener('mouseup', mouseUp);
+        document.addEventListener('mouseup', mouseUp);
 
     });
 
@@ -54,10 +57,8 @@ function addEventListenerToBox(box) {
             return;
         }
 
-        let old_id = parseInt(boxContainer.lastElementChild.textContent);
-
         if (ev.altKey === true) {
-            if (old_id === 1) {
+            if (boxContainer.lastElementChild === boxContainer.firstElementChild) {
                 return;
             }
             box.remove();
@@ -69,6 +70,7 @@ function addEventListenerToBox(box) {
         new_box.style.top = (box.offsetTop + box.clientHeight) + 'px';
         new_box.style.left = (box.offsetLeft + box.clientWidth) + 'px';
 
+        let old_id = parseInt(boxContainer.lastElementChild.textContent);
         new_box.textContent = `${old_id + 1}`;
 
         boxContainer.appendChild(new_box);
